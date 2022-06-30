@@ -1,6 +1,7 @@
 import 'package:cubes/pages/page_MesRessources.dart';
 import 'package:cubes/pages/page_accueil.dart';
 import 'package:cubes/pages/page_profil.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PageCreerRessource extends StatefulWidget {
@@ -43,7 +44,15 @@ class _PageCreerRessourceState extends State<PageCreerRessource> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
+        actions: <Widget>[
+          TextButton(
+              child: Text('Tweet', style: TextStyle(color: Colors.black),),
+              onPressed: () async {
+                ;
+                Navigator.pop(context);
+              },
+          ),
+
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
             child: IconButton(
@@ -62,145 +71,15 @@ class _PageCreerRessourceState extends State<PageCreerRessource> {
         elevation: 0,
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.94,
-                  decoration: BoxDecoration(),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                        child: InkWell(
-                          onTap: () async {},
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.96,
-                            height: 350,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFF1F5F8),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: Image.asset(
-                                  'images/CreateRessources.PNG',
-                                ).image,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 6,
-                                  color: Color(0x3A000000),
-                                  offset: Offset(0, 2),
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: textController,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  hintText: 'Comment....',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Lexend Deca',
-                                    color: Color(0xFF8B97A2),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFDBE2E7),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFDBE2E7),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  contentPadding:
-                                  EdgeInsetsDirectional.fromSTEB(
-                                      20, 32, 20, 12),
-                                ),
-                                style: TextStyle(
-                                  fontFamily: 'Lexend Deca',
-                                  color: Color(0xFF090F13),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                textAlign: TextAlign.start,
-                                maxLines: 4,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-            child: TextFormField(
-
-              decoration: InputDecoration(
-                icon: Icon(
-                Icons.place,
-                color: Color(0xFF95A1AC),
-                size: 16,
-              ), hintText: 'Tag Location',
-              hintStyle: TextStyle(
-                fontFamily: 'Lexend Deca',
-                color: Color(0xFF95A1AC),
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-              enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-              color: Color(0xFFDBE2E7),
-              width: 2,
-              ),),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-            child: ElevatedButton(
-              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Color(0xFF4B39EF), fixedSize: Size(260, 40),
-                  elevation: 3, textStyle: TextStyle(fontFamily: 'Lexend Deca',fontSize: 18, fontWeight: FontWeight.bold)),
-              child: Text("Créer post"),
-              onPressed: () async {
-                print('Button pressed ...');
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PageMesRessources(),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      body: Container(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: new Form(child: TextFormField(
+            onChanged: (val) {
+              setState(() {
+                //text = val;
+              });
+            },
+          ),),),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
@@ -246,3 +125,9 @@ class _PageCreerRessourceState extends State<PageCreerRessource> {
   }
 
 }
+
+String getInitial(String nom, String prenom) {
+  var initial = nom.substring(0,1) + prenom.substring(0,1);
+  return initial;
+}
+

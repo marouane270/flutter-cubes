@@ -1,9 +1,12 @@
 
 import 'dart:convert';
+import 'dart:ffi';
 
+import 'package:cubes/config.dart';
 import 'package:cubes/pages/page_MDPoublie.dart';
 import 'package:cubes/pages/page_accueil.dart';
 import 'package:cubes/pages/page_createCompte.dart';
+import 'package:cubes/userLog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +21,7 @@ class PageConnexion extends StatefulWidget {
 
 class _PageHomeState extends State<PageConnexion> {
 
+  UserLog userLog = UserLog('', '');
   bool _isLoading = false;
   TextEditingController? emailAddressController;
   TextEditingController? passwordController;
@@ -123,7 +127,20 @@ class _PageHomeState extends State<PageConnexion> {
                               children: [
                                 Expanded(
                                   child: TextFormField(
-                                    controller: emailAddressController,
+                                    //controller: emailAddressController,
+                                    controller: TextEditingController(text: userLog.email),
+                                    onChanged: (value){
+                                      userLog.email = value;
+                                    },
+                                    validator: (value){
+                                      if(value!.isEmpty){
+                                        return 'Entrer votre email ci-dessus';
+                                      } else if(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+                                        return null;
+                                      }else{
+                                        return 'Enter valid email';
+                                      };
+                                    },
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       labelText: 'Email Address',
@@ -178,7 +195,17 @@ class _PageHomeState extends State<PageConnexion> {
                               children: [
                                 Expanded(
                                   child: TextFormField(
-                                    controller: passwordController,
+                                    //controller: passwordController,
+                                    controller: TextEditingController(text: userLog.password),
+                                    onChanged: (value){
+                                      userLog.password = value;
+                                    },
+                                    validator: (value){
+                                      if(value!.isEmpty){
+                                        return 'Entrer votre mot de passe ci-dessus';
+                                      }
+                                      return null;
+                                    },
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       labelText: 'Password',
@@ -262,14 +289,16 @@ class _PageHomeState extends State<PageConnexion> {
                                     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.blue, fixedSize: Size(150, 40),
                                         elevation: 0, textStyle: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.bold)),
                                     child: Text("Login"),
-                                    onPressed: () {
+                                    onPressed: (){
                                       setState(() {
-                                        _isLoading = true;
                                       });
                                       print(emailAddressController!.text);
                                       print(passwordController!.text);
                                       print("avant Login");
-                                      login(emailAddressController!.text, passwordController!.text );
+                                      login(userLog.email, userLog.password);
+                                      
+                                      
+
                                     },
                                   ),
 
@@ -313,32 +342,63 @@ class _PageHomeState extends State<PageConnexion> {
 
     );
   }
-  login(String email, String password) async{
+  Future login(String email, String password) async {
+    var client = http.Client();
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    var url = Uri.http(Config.apiURL, "/user/signin");
+
+
+    print(url);
     Map data = {
       'userMail': email,
       'userPassword': password
     };
-    var jsonData = null;
+    print(data);
+
+
+    var response = await client.post(
+        url,
+        headers: requestHeaders,
+        body: jsonEncode(data),
+    ).then((http.Response response) {
+      final String res = response.body;
+      final int statusCode = jsonDecode(res)["status"];
+      print(statusCode);
+      if (statusCode == 200) {
+        Navigator.push(context, new MaterialPageRoute(builder: (context) => PageHome()));
+        return true;
+      }
+      else{
+        return false;
+      }
+    });
+
+
+    /*var jsonData = null;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String url = 'http://localhost:3005/user/signin';
+    String url2 = 'http://192.168.1.29:3005/user/signin';
     print("avant fetch");
     print(jsonEncode(data));
-    print(Uri.parse(url));
-    var response = await http.post(Uri.parse(url), body: jsonEncode(data));
+    print(Uri.parse(url2));
+    var response2 = await http.post(Uri.parse(url2), body: jsonEncode(data));
     print("apres fetch");
 
     print(response);
     if(response.statusCode == 200){
       jsonData = json.decode(response.body);
       setState(() {
-        _isLoading = false;
         sharedPreferences.setString("token", jsonData['token']);
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => PageHome()), (Route<dynamic> route) => false);
       });
     }
     else{
       print(response.body);
-    }
+    }*/
   }
 }
 

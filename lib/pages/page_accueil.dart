@@ -1,12 +1,20 @@
+import 'dart:convert';
+
+import 'package:cubes/api/api_user.dart';
+import 'package:cubes/components/post.dart';
+import 'package:cubes/config.dart';
 import 'package:cubes/pages/page_comments.dart';
 import 'package:cubes/pages/page_compte.dart';
 import 'package:cubes/pages/page_connexion.dart';
 import 'package:cubes/pages/page_creerRessource.dart';
 import 'package:cubes/pages/page_profil.dart';
+import 'package:cubes/ressourcesALL.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
 
 class PageHome extends StatefulWidget {
   const PageHome({Key? key}) : super(key: key);
@@ -15,21 +23,25 @@ class PageHome extends StatefulWidget {
   _PageHomeState createState() => _PageHomeState();
 }
 
-class _PageHomeState extends State<PageHome> {
+/*Future<Data> fetchData() async {
+  final response = await http.get(Uri.parse('http://172.20.10.4:3005/ressource'));
 
+  if(response.statusCode == 200) {
+    return Data.fromJson(jsonDecode(response.body));
+
+  }else{
+    throw Exception('Failed to load DATA');
+  }
+}*/
+
+class _PageHomeState extends State<PageHome> {
   SharedPreferences? sharedPreferences;
+
+
 
   @override
   void initState() {
     super.initState();
-
-  }
-
-  checkLoginStatut() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    if(sharedPreferences!.getString("token") == null) {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => PageConnexion()), (Route<dynamic> route) => false);
-    }
   }
 
 
@@ -40,19 +52,37 @@ class _PageHomeState extends State<PageHome> {
       _selectedIndex = index;
     });
   }
+
   String choix = "Aucun";
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: new AppBar(
+          title: Row(
+            children: <Widget>[
+              Container(
+                child: CircleAvatar(
+                  child: new Text("SW"),
+                  radius: 15.0,
+                ),
+                margin: EdgeInsets.only(right: 30.0),
+              ),
+              new Text(Config.appName)
+            ],
+          ),
+          elevation: 3.0,
+        ),
       backgroundColor: Color(0xFFF1F5F8),
       floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PageConnexion(),
-              ),
-            );
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PageCreerRessource(),
+            ),
+          );
 
           print('FloatingActionButton pressed ...');
         },
@@ -65,500 +95,23 @@ class _PageHomeState extends State<PageHome> {
         ),
       ),
       body: SingleChildScrollView(
-      child: Column(
-      mainAxisSize: MainAxisSize.max,
-        children: [
-          Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-              color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 3,
-                    color: Color(0x3A000000),
-                    offset: Offset(0, 1),
-                  )
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 44, 0, 0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                            children: [
-                            Text( '[Nom APPLI]',
-                              style: TextStyle(
-                                fontFamily: 'Lexend Deca',
-                                color: Color(0xFF090F13),
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                              Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(160, 5, 8, 5),
-                                  child: Container(
-                                      width: 40,
-                                      height: 40,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Image.asset(
-                                        'images/photodeprofil.jpg',
-                                            fit: BoxFit.fitHeight,
-                                      ),
-                                  ),
-                              ),
-                            ],
-                        ),
-                      ),
-                    ],
-                ),
-              ),
-          ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.94,
-                        decoration: BoxDecoration(),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 2, 0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Card(
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    color: Color(0xFF4B39EF),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          1, 1, 1, 1),
-                                      child: Container(
-                                        width: 40,
-                                        height: 40,
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Image.asset(
-                                            'images/photodeprofil.jpg'
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                              padding: EdgeInsetsDirectional.fromSTEB(
-                                                  12, 0, 0, 0),
-                                              child: Text(
-                                                  '[@username]',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Lexend Deca',
-                                                    color: Color(0xFF090F13),
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.normal,
-                                                  ),
-                                              ),
-                                          ),
-                                          IconButton(
-                                              icon: Icon(
-                                                Icons.keyboard_control,
-                                                color: Color(0xFF262D34),
-                                                size: 20,
-                                              ),
-                                                onPressed: () async {
-                                                  bottom();
+        child: getAllPosts(),
 
-                                                },
-                                          ),
-                                        ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.96,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 6,
-                                      color: Color(0x3A000000),
-                                      offset: Offset(0, 2),
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.asset(
-                                    'images/photodeprofil.jpg',
-                                    width: 100,
-                                    height: 300,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 4, 8, 0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 16, 0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Icon(
-                                          Icons.favorite_border,
-                                          color: Color(0xFF95A1AC),
-                                          size: 24,
-                                        ),
-                                        Padding(
-                                          padding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              4, 0, 0, 0),
-                                          child: Text(
-                                            '2,493',
-                                            style: TextStyle(
-                                              fontFamily: 'Lexend Deca',
-                                              color: Color(0xFF8B97A2),
-                                              fontSize: 14,
-                                              fontWeight:
-                                              FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.mode_comment_outlined,
-                                            color: Color(0xFF95A1AC),
-                                            size: 24,
-                                          ),
-                                          onPressed: () async {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                builder: (context) =>
-                                                PageCom())
-                                            );
-
-                                          },
-                                        ),
-                                        Padding(
-                                          padding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              4, 0, 0, 0),
-                                          child: Text(
-                                            '4',
-                                            style: TextStyle(
-                                              fontFamily: 'Lexend Deca',
-                                              color: Color(0xFF8B97A2),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
-                                        ],
-                                  ),
-                                  ],
-                                ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Icon(
-                                        Icons.play_arrow_rounded,
-                                        color: Color(0xFF95A1AC),
-                                        size: 24,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(2, 4, 0, 0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      '[DESCRIPTION]   LE monde OU rien, haha.⁣ ',
-                                      style: TextStyle(
-                                        fontFamily: 'Lexend Deca',
-                                        color: Color(0xFF090F13),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-        Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-            child: Container(
-                width: MediaQuery.of(context).size.width * 0.94,
-                decoration: BoxDecoration(),
-                child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 2, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Card(
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              color: Color(0xFF4B39EF),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    1, 1, 1, 1),
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Image.asset(
-                                      'images/swipeup.png'
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12, 0, 0, 0),
-                                    child: Text(
-                                      '[@username]',
-                                      style: TextStyle(
-                                        fontFamily: 'Lexend Deca',
-                                        color: Color(0xFF090F13),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.keyboard_control,
-                                      color: Color(0xFF262D34),
-                                      size: 20,
-                                    ),
-                                    onPressed: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (context) {
-                                          return Padding(
-                                            padding: MediaQuery.of(context)
-                                                .viewInsets,
-                                            /*child: TLfoncWidget(),*/
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.96,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 6,
-                                color: Color(0x3A000000),
-                                offset: Offset(0, 2),
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              'images/swipeup.png',
-                              width: 100,
-                              height: 300,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 4, 8, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 16, 0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Icon(
-                                        Icons.favorite_border,
-                                        color: Color(0xFF95A1AC),
-                                        size: 24,
-                                      ),
-                                      Padding(
-                                        padding:
-                                        EdgeInsetsDirectional.fromSTEB(
-                                            4, 0, 0, 0),
-                                        child: Text(
-                                          '2,493',
-                                          style: TextStyle(
-                                            fontFamily: 'Lexend Deca',
-                                            color: Color(0xFF8B97A2),
-                                            fontSize: 14,
-                                            fontWeight:
-                                            FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Icon(
-                                      Icons.mode_comment_outlined,
-                                      color: Color(0xFF95A1AC),
-                                      size: 24,
-                                    ),
-                                    Padding(
-                                      padding:
-                                      EdgeInsetsDirectional.fromSTEB(
-                                          4, 0, 0, 0),
-                                      child: Text(
-                                        '4',
-                                        style: TextStyle(
-                                          fontFamily: 'Lexend Deca',
-                                          color: Color(0xFF8B97A2),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Icon(
-                                  Icons.play_arrow_rounded,
-                                  color: Color(0xFF95A1AC),
-                                  size: 24,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(2, 4, 0, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '[DESCRIPTION]   SWIPE UP pour ma nouvelle Mixtape , haha.⁣ ',
-                                style: TextStyle(
-                                  fontFamily: 'Lexend Deca',
-                                  color: Color(0xFF090F13),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                ),
-            ),
-        ),
-                  ],
-                ),
-              ),
-        ],
-      ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: "Creer"),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: "Profil"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle), label: "Profil"),
         ],
-        onTap: (int index){
-          switch(index){
+        onTap: (int index) {
+          switch (index) {
             case 0:
               print("Goto page Alert");
               Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context){
+                  MaterialPageRoute(builder: (context) {
                     return PageHome();
                   })
               );
@@ -567,7 +120,7 @@ class _PageHomeState extends State<PageHome> {
               print("Goto Page Simple");
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context){
+                  MaterialPageRoute(builder: (context) {
                     return PageCreerRessource();
                   })
               );
@@ -576,7 +129,7 @@ class _PageHomeState extends State<PageHome> {
               print("Goto Page Snack");
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context){
+                  MaterialPageRoute(builder: (context) {
                     return PageCompte(idUser: "62441e770105eda62d6385b1");
                   })
               );
@@ -588,14 +141,13 @@ class _PageHomeState extends State<PageHome> {
         selectedItemColor: Colors.lightBlue[800],
       ),
     );
-
   }
 
-  Future<void> bottom() async{
+  Future<void> bottom() async {
     showModalBottomSheet(
         context: context,
         isDismissible: false,
-        builder: (contextDialog){
+        builder: (contextDialog) {
           return Container(
             height: 280,
             decoration: BoxDecoration(
@@ -626,7 +178,8 @@ class _PageHomeState extends State<PageHome> {
                               borderRadius: BorderRadius.circular(40),
                             ),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  8, 8, 8, 8),
                               child: Icon(
                                 Icons.share_rounded,
                                 color: Color(0xFF57636C),
@@ -636,10 +189,12 @@ class _PageHomeState extends State<PageHome> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  12, 0, 0, 0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
                                 children: [
                                   Text(
                                     'Partager',
@@ -680,7 +235,8 @@ class _PageHomeState extends State<PageHome> {
                                 borderRadius: BorderRadius.circular(40),
                               ),
                               child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    8, 8, 8, 8),
                                 child: Icon(
                                   Icons.check_circle_outline,
                                   color: Color(0xFF57636C),
@@ -690,10 +246,12 @@ class _PageHomeState extends State<PageHome> {
                             ),
                             Expanded(
                               child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    12, 0, 0, 0),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween,
                                   children: [
                                     Text(
                                       'Exploitée/Non exploitée',
@@ -732,7 +290,8 @@ class _PageHomeState extends State<PageHome> {
                               borderRadius: BorderRadius.circular(40),
                             ),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  8, 8, 8, 8),
                               child: Icon(
                                 Icons.remove_red_eye,
                                 color: Color(0xFF57636C),
@@ -742,10 +301,12 @@ class _PageHomeState extends State<PageHome> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  12, 0, 0, 0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
                                 children: [
                                   Text(
                                     'A regarder plus tard',
@@ -783,7 +344,8 @@ class _PageHomeState extends State<PageHome> {
                               borderRadius: BorderRadius.circular(40),
                             ),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  8, 8, 8, 8),
                               child: Icon(
                                 Icons.supervisor_account_outlined,
                                 color: Color(0xFF57636C),
@@ -793,10 +355,12 @@ class _PageHomeState extends State<PageHome> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  12, 0, 0, 0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
                                 children: [
                                   Text(
                                     'Identifier des personnes',
@@ -807,6 +371,7 @@ class _PageHomeState extends State<PageHome> {
                                       fontWeight: FontWeight.normal,
                                     ),
                                   ),
+                                  //getImage()
                                 ],
                               ),
                             ),
@@ -820,6 +385,106 @@ class _PageHomeState extends State<PageHome> {
             ),
           );
         }
+    );
+  }
+
+  Future allRessource() async {
+    var client = http.Client();
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    var url = Uri.http(Config.apiURL, "/ressource");
+
+    var response = await client.get(
+      url,
+      headers: requestHeaders,
+    ).then((http.Response response) {
+      final String res = response.body;
+      final int statusCode = jsonDecode(res)["status"];
+      //print(statusCode);
+      if (statusCode == 200) {
+
+
+        dynamic jsonData = json.decode(res)["data"];
+
+        for(var data in jsonData) {
+          print(data["posterId"]);
+        }
+      }
+      else {
+        return false;
+      }
+    });
+  }
+
+  Future<Widget> getAllRessource() async {
+    print("Test");
+    List<Widget> result = [];
+    var client = http.Client();
+
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    var url = Uri.http(Config.apiURL, "/ressource");
+
+    var response = await client.get(
+      url,
+      headers: requestHeaders,
+    ).then((http.Response response) {
+      final String res = response.body;
+      final int statusCode = jsonDecode(res)["status"];
+      print(statusCode);
+      if (statusCode == 200) {
+        print("Passe ici");
+
+        dynamic jsonData = json.decode(res)["data"];
+
+        print(jsonData[0]);
+
+        for(var data in jsonData) {
+          print(data);
+          result.add(
+            Post(
+              posterId: (data["posterId"] != null ? data["posterId"] : ""),
+              posterNom: (data["posterNom"] != null ? data["posterNom"] : ""),
+              posterPrenom: (data["posterPrenom"] != null ? data["posterPrenom"] : ""),
+              posterPseudo: (data["posterPseudo"] != null ? data["posterPseudo"] : ""),
+              message: (data["message"] != null ? data["message"] : ""),
+              photo: (data["photo"] != null ? data["photo"] : ""),
+              //likers: (data["likers"] != null ? data["createdAt"] : ""),
+              //comments: (data["comments"] != null ? data["createdAt"] : ""),
+              createdAt: (data["createdAt"] != null ? data["createdAt"] : "")
+            )
+          );
+        }
+      }
+    });
+    if(result.length > 0) {
+      return Column(children: result);
+    }
+    print("Error");
+    return Text("Error");
+  }
+
+  Widget getAllPosts() {
+    return FutureBuilder(
+      builder: (context, projectSnap) {
+        if (projectSnap.connectionState == ConnectionState.waiting) {
+          return const Text("LOADING");
+        } else {
+          if(projectSnap.hasData) {
+            return projectSnap.data as Widget;
+          } else {
+            return const Text("ERROR");
+          }
+        }
+      },
+      future: getAllRessource(),
     );
   }
 }

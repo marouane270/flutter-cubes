@@ -15,7 +15,6 @@ class _PageCompteState extends State<PageCompte> {
   @override
   void initState() {
     super.initState();
-    data();
   }
 
   String? nom;
@@ -23,8 +22,8 @@ class _PageCompteState extends State<PageCompte> {
   String? pseudo;
   String? mail;
 
-  void data() async{
-    ApiUser apiUser = ApiUser();
+  /*void data() async{
+    /*ApiUser apiUser = ApiUser();*/
     User? leUser = await apiUser.getOneUser(widget.idUser);
 
     setState(() {
@@ -37,7 +36,7 @@ class _PageCompteState extends State<PageCompte> {
     print('le tropheeeeeeeeeee');
     print(pseudo);
 
-  }
+  }*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
