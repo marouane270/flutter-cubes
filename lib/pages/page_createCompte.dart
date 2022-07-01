@@ -43,12 +43,6 @@ class _PageCreateCompteState extends State<PageCreateCompte> {
                     Colors.teal,
                   ],
                 ),
-                  image: DecorationImage(
-                    fit: BoxFit.none,
-                    image: Image.asset(
-                      'images/LOGO.PNG',
-                    ).image,
-                   ),
                   ),
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),

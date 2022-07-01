@@ -1,4 +1,6 @@
 
+import 'package:cubes/pages/page_MesRessources.dart';
+import 'package:cubes/pages/page_accueil.dart';
 import 'package:flutter/material.dart';
 import 'package:cubes/models/user.dart';
 import 'package:cubes/api/api_user.dart';
@@ -64,10 +66,10 @@ class _PageCompteState extends State<PageCompte> {
     return ListTile(
       leading: CircleAvatar(
       ),
-      title: Text( "QLF Ademo : ${pseudo}",
+      title: Text( "Sonia Watts",
         style: TextStyle( fontWeight: FontWeight.bold) ,
       ),
-      subtitle: Text( "UX Designer"),
+      subtitle: Text( "@Sonia_Wts"),
     );
   }
 
@@ -85,7 +87,17 @@ class _PageCompteState extends State<PageCompte> {
     return Column(
       children: [
         colorTile(Icons.person_outline,Colors.deepPurple,"Données Personelles",),
-        colorTile(Icons.image,Colors.pink,"Mes Ressources"),
+        //colorTile(Icons.image,Colors.pink,"Mes Ressources"),
+        TextButton(onPressed: ()async {
+    await Navigator.push(
+    context,
+    MaterialPageRoute(
+    builder: (context) => PageMesRessources(),
+    ),
+    );
+
+    print('FloatingActionButton pressed ...');
+    }, child: Text("Mes Ressources", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500 ),)),
         colorTile(Icons.auto_awesome_motion,Colors.orange,"Biblithèques"),
         colorTile(Icons.settings_outlined,Colors.blue,"Paramètres"),
       ],
@@ -162,7 +174,7 @@ class _PageCompteState extends State<PageCompte> {
   Widget addButton(){
     return CircleAvatar(
       child: Icon(Icons.add, color: Colors.white),
-      backgroundColor: Colors.purple,
+      backgroundColor: Colors.blue,
     );
   }
 

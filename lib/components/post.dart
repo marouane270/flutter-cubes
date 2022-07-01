@@ -66,9 +66,9 @@ class _PostState extends State<Post> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      IconButton(onPressed: () {},padding: const EdgeInsets.all(0.0), icon: IconNumberedWidget(
+                      IconButton(onPressed: () { },padding: const EdgeInsets.all(0.0), icon: IconNumberedWidget(
                           ico: Icons.message,
-                          number: widget.posterPseudo.length)),//commentaire
+                          number: widget.posterPrenom.length)),//commentaire
                       Spacer(),
                       /*IconNumberedWidget(
                           ico: LineIcons.retweet, number: data.retweets),

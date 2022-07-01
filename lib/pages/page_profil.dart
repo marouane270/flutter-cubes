@@ -180,7 +180,7 @@ class _PageProfilState extends State<PageProfil> {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => PageMesRessources(),
+                                  builder: (context) => PageHome(),
                                 ),
                               );
                             },
